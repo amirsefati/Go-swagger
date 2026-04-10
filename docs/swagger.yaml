@@ -1,10 +1,10 @@
 basePath: /
 definitions:
-  main.Product:
+  models.CreateProductRequest:
     properties:
-      id:
-        type: integer
       name:
+        maxLength: 100
+        minLength: 1
         type: string
       price:
         type: number
@@ -16,10 +16,36 @@ definitions:
     - price
     - stock
     type: object
+  models.UpdateProductRequest:
+    properties:
+      name:
+        maxLength: 100
+        minLength: 1
+        type: string
+      price:
+        type: number
+      stock:
+        minimum: 0
+        type: integer
+    required:
+    - name
+    - price
+    - stock
+    type: object
+  response.Response:
+    properties:
+      data: {}
+      error:
+        type: string
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
 host: localhost:8080
 info:
   contact: {}
-  description: A simple CRUD API for shop products
+  description: A production-ready CRUD API for shop products
   title: Shop Product API
   version: "1.0"
 paths:
@@ -34,9 +60,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/main.Product'
-            type: array
+            $ref: '#/definitions/response.Response'
       summary: List all products
       tags:
       - products
@@ -50,20 +74,18 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/main.Product'
+          $ref: '#/definitions/models.CreateProductRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/main.Product'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.Response'
       summary: Create a product
       tags:
       - products
@@ -84,15 +106,11 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.Response'
         "404":
           description: Not Found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.Response'
       summary: Delete a product
       tags:
       - products
@@ -112,13 +130,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.Product'
+            $ref: '#/definitions/response.Response'
         "404":
           description: Not Found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.Response'
       summary: Get a product
       tags:
       - products
@@ -137,20 +153,22 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/main.Product'
+          $ref: '#/definitions/models.UpdateProductRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.Product'
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
       summary: Update a product
       tags:
       - products
